@@ -1,4 +1,6 @@
 #include <vector>
+enum direction {UP, DOWN, LEFT, RIGHT};
+
 class Game2048 {
 
 public:
@@ -7,7 +9,7 @@ public:
     Game2048();
     void play();
     void printBoard();
-    void score();
+    int score();
     bool StillEmpty(std::vector<std::pair<int, int>> emptyTiles);
     bool isWin(std::vector<std::vector<int>> board);
     
@@ -19,4 +21,3 @@ private:
     
 };
 
-enum direction {UP, DOWN, LEFT, RIGHT};

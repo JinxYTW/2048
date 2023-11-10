@@ -1,5 +1,6 @@
 #include "2048.h"
 #include <iostream>
+#include <vector>
 
 Game2048::Game2048()
 {
@@ -28,7 +29,7 @@ void Game2048::printBoard()
             std::cout << "|";
             if (board[i][j] == 0)
             {
-                std::cout << "   ";
+                std::cout << "    ";
             }
             else
             {
@@ -262,7 +263,7 @@ bool Game2048::isWin(std::vector<std::vector<int>> board)
 
 void Game2048::play()
 {
-    while (true)
+    while (isWin(board)==false)
     {
         printBoard();
         std::cout << "Enter a move (ZQSD): ";
@@ -289,23 +290,19 @@ void Game2048::play()
             std::cout << "Invalid move" << std::endl;
             continue;
         }
-        if(isWin(board)==true)
-        {
-            std::cout << "You win" << std::endl;
-            exit(0);
-        }
-        else
-        {
-            addTile();
+
+        int currentScore = score();
+        std::cout << "Current score: " << currentScore << std::endl;
+        addTile();
         }
         
+        std::cout << "You win" << std::endl;
+        exit(0);
     }
-}
+    
 
 
-
-
-void Game2048::score()
+int Game2048::score()
 {
     int score = 0;
     for (int i = 0; i < 4; i++)
@@ -315,7 +312,7 @@ void Game2048::score()
             score += board[i][j];
         }
     }
-    std::cout << "Your score is: " << score << std::endl;
+    return score;
 }
 
 
