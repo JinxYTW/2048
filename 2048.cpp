@@ -77,7 +77,7 @@ void Game2048::addTile()
     int randomValue = rand() % 10; // On récupère un nombre aléatoire entre 0 et 9
     if (randomValue == 0)
     {
-        board[randomSpot.first][randomSpot.second] = 4;
+        board[randomSpot.first][randomSpot.second] = 2;
     }
     else
     {
@@ -87,161 +87,186 @@ void Game2048::addTile()
 
 void Game2048::movetile(direction dir) //Utilisation de Copilot pour celle ci
 {
-    if (dir == UP)
+   if (dir == UP)
+   {
+    for (int j = 0; j < 4; j++)
     {
-        for (int j = 0; j < 4; j++)
+        int i = 0;
+        while (i < 4)
         {
-            int i = 0;
-            while (i < 4)
+            //Test if the tile is empty
+            if (board[i][j] == 0)
             {
-                //Test if the tile is empty
-                if (board[i][j] == 0)
+                for (int k = i + 1; k < 4; k++)
                 {
-                    i++;
-                }
-                //Test if the tile is not empty
-                else
-                {
-                    //Search for the next tile
-                    int k = i + 1;
-                    //Test if the next tile is empty
-                    while (k < 4 && board[k][j] == 0)
+                    //Test if the next tile is not empty
+                    if (board[k][j] != 0)
                     {
-                        k++;
-                    }
-                    //Test if the tile is at the end of the board
-                    if (k == 4)
-                    {
-                        //Change row
-                        i++;
-                    }
-                    //Test if the next tile is different
-                    else if (board[i][j] != board[k][j])
-                    {
-                        //Change row
-                        i = k;
-                    }
-                    //Test if the next tile is the same
-                    else
-                    {
-                        //Fusion
-                        board[i][j] *= 2;
+                        //Move the tile
+                        board[i][j] = board[k][j];
                         //Empty the next tile
                         board[k][j] = 0;
-                        //Change row
-                        i = k + 1;
+                        break;
                     }
+                    //
+                    if (k < 4 && board[i][j] == board[k][j])
+                {
+                    // Merge the tiles
+                    board[i][j] *= 2;
+                    //Empty the next tile
+                    board[k][j] = 0;
+                }
+                //
                 }
             }
+            //Test if the tile is not empty
+            else
+            {
+                int k = i + 1;
+                while (k < 4 && board[k][j] == 0)
+                {
+                    k++;
+                }
+                if (k < 4 && board[i][j] == board[k][j])
+                {
+                    // Merge the tiles
+                    board[i][j] *= 2;
+                    //Empty the next tile
+                    board[k][j] = 0;
+                }
+            }
+            i++;
         }
     }
+}
     else if (dir == DOWN)
+{
+    for (int j = 0; j < 4; j++)
     {
-        for (int j = 0; j < 4; j++)
+        int i = 3;
+        while (i >= 0)
         {
-            int i = 3;
-            while (i >= 0)
+            if (board[i][j] == 0)
             {
-                if (board[i][j] == 0)
+                for (int k = i - 1; k >= 0; k--)
                 {
-                    i--;
-                }
-                else
-                {
-                    int k = i - 1;
-                    while (k >= 0 && board[k][j] == 0)
+                    if (board[k][j] != 0)
                     {
-                        k--;
-                    }
-                    if (k == -1)
-                    {
-                        i--;
-                    }
-                    else if (board[i][j] != board[k][j])
-                    {
-                        i = k;
-                    }
-                    else
-                    {
-                        board[i][j] *= 2;
+                        board[i][j] = board[k][j];
                         board[k][j] = 0;
-                        i = k - 1;
+                        break;
                     }
+                    //
+                    if (k >= 0 && board[i][j] == board[k][j])
+                {
+                    board[i][j] *= 2;
+                    board[k][j] = 0;
+                }
+                //
                 }
             }
-        }
-    }
-    else if (dir == LEFT)
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            int j = 0;
-            while (j < 4)
+            else
             {
-                if (board[i][j] == 0)
+                int k = i - 1;
+                while (k >= 0 && board[k][j] == 0)
                 {
-                    j++;
+                    k--;
                 }
-                else
+                if (k >= 0 && board[i][j] == board[k][j])
                 {
-                    int k = j + 1;
-                    while (k < 4 && board[i][k] == 0)
-                    {
-                        k++;
-                    }
-                    if (k == 4)
-                    {
-                        j++;
-                    }
-                    else if (board[i][j] != board[i][k])
-                    {
-                        j = k;
-                    }
-                    else
-                    {
-                        board[i][j] *= 2;
-                        board[i][k] = 0;
-                        j = k + 1;
-                    }
+                    board[i][j] *= 2;
+                    board[k][j] = 0;
                 }
             }
+            i--;
         }
     }
+}
+    else if (dir == LEFT)
+{
+    for (int i = 0; i < 4; i++)
+    {
+        int j = 0;
+        while (j < 4)
+        {
+            if (board[i][j] == 0)
+            {
+                for (int k = j + 1; k < 4; k++)
+                {
+                    if (board[i][k] != 0)
+                    {
+                        board[i][j] = board[i][k];
+                        board[i][k] = 0;
+                        break;
+                    }
+                    //
+                    if (k < 4 && board[i][j] == board[i][k])
+                {
+                    board[i][j] *= 2;
+                    board[i][k] = 0;
+                }
+                //
+                }
+            }
+            else
+            {
+                int k = j + 1;
+                while (k < 4 && board[i][k] == 0)
+                {
+                    k++;
+                }
+                if (k < 4 && board[i][j] == board[i][k])
+                {
+                    board[i][j] *= 2;
+                    board[i][k] = 0;
+                }
+            }
+            j++;
+        }
+    }
+}
     else if (dir == RIGHT)
     {
-        for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++)
         {
-            int j = 3;
-            while (j >= 0)
+        int j = 3;
+        while (j >= 0)
             {
-                if (board[i][j] == 0)
-                {
-                    j--;
-                }
-                else
-                {
-                    int k = j - 1;
-                    while (k >= 0 && board[i][k] == 0)
+            if (board[i][j] == 0)
+            {
+                for (int k = j - 1; k >= 0; k--)
                     {
-                        k--;
-                    }
-                    if (k == -1)
-                    {
-                        j--;
-                    }
-                    else if (board[i][j] != board[i][k])
-                    {
-                        j = k;
-                    }
-                    else
-                    {
-                        board[i][j] *= 2;
+                    if (board[i][k] != 0)
+                        {
+                        board[i][j] = board[i][k];
                         board[i][k] = 0;
-                        j = k - 1;
+                        break;
+                        }
+                        //
+                    if (k >= 0 && board[i][j] == board[i][k])
+                {
+                    board[i][j] *= 2;
+                    board[i][k] = 0;
+                }
+                //
                     }
+            }
+            else
+            {
+                int k = j - 1;
+                while (k >= 0 && board[i][k] == 0)
+                {
+                    k--;
+                }
+                if (k >= 0 && board[i][j] == board[i][k])
+                {
+                    board[i][j] *= 2;
+                    board[i][k] = 0;
                 }
             }
-        }
+            j--;
+            }   
+        }   
     }
 }
 
