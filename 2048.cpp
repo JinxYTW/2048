@@ -1,6 +1,7 @@
 #include "2048.h"
 #include <iostream>
 #include <vector>
+#include <windows.h>
 
 Game2048::Game2048()
 {
@@ -75,13 +76,17 @@ void Game2048::addTile()
     
         // Place a 2 or a 4 tile at that spot
     int randomValue = rand() % 10; // On récupère un nombre aléatoire entre 0 et 9
-    if (randomValue == 0)
+    if (randomValue <= 4)
     {
         board[randomSpot.first][randomSpot.second] = 2;
     }
+    else if (randomValue > 4 && randomValue <= 7)
+    {
+        board[randomSpot.first][randomSpot.second] = 4;
+    }
     else
     {
-        board[randomSpot.first][randomSpot.second] = 2;
+        board[randomSpot.first][randomSpot.second] = 8;
     }
 }
 
@@ -286,11 +291,24 @@ bool Game2048::isWin(std::vector<std::vector<int>> board)
     return win;
 }
 
+void Game2048::clearScreen()
+{
+    HANDLE hOut;
+    COORD Position;
+
+    hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    Position.X = 0;
+    Position.Y = 0;
+    SetConsoleCursorPosition(hOut, Position);
+}
+
 void Game2048::play()
 {
     while (isWin(board)==false)
     {
         printBoard();
+        clearScreen();
         std::cout << "Enter a move (ZQSD): ";
         char move;
         std::cin >> move;

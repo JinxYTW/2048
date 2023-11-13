@@ -12,6 +12,7 @@ public:
     int score();
     bool StillEmpty(std::vector<std::pair<int, int>> emptyTiles);
     bool isWin(std::vector<std::vector<int>> board);
+    void clearScreen();
     
 private:
     
